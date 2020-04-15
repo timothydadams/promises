@@ -58,9 +58,34 @@ var readFileAndMakeItFunny = function(filePath, callback) {
 
 var readFileAndMakeItFunnyAsync = Promise.promisify(readFileAndMakeItFunny);
 
+
+var readFirst = function (filePath, callback) {
+  fs.readFileAsync(filePath, 'utf8', function (err, file) {
+    if (err) { return callback(err); }
+    var allLines = file.split('\n').map(line => line);
+    callback(null, allLines[0]);
+  });
+};
+
+var readFirstAsync = Promise.promisify(readFirst);
+
+
+
+
+var writeFile = function(filePath, data, callback) {
+  fs.writeFileAsync(filePath, data, (err) => {
+    if (err) { return callback(err); }
+    callback(null);
+  });
+};
+
+var writeFileAsync = Promise.promisify(writeFile);
+
 // Export these functions so we can test them and reuse them in later exercises
 module.exports = {
   getGitHubProfileAsync: getGitHubProfileAsync,
   generateRandomTokenAsync: generateRandomTokenAsync,
-  readFileAndMakeItFunnyAsync: readFileAndMakeItFunnyAsync
+  readFileAndMakeItFunnyAsync: readFileAndMakeItFunnyAsync,
+  readFirstAsync: readFirstAsync,
+  writeFileAsync: writeFileAsync
 };
